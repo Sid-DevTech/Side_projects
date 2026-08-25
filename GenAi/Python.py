@@ -308,5 +308,5 @@ else:
     if remove_field == "":
         print("\nRemoved: No field removed")
     print("Updated record:")
-    print(f"Keys:    {emp_id.items()}"
+    print(f"Keys:    {emp_id.items()}")
     print(f"Values:  {emp_id.keys()}")
