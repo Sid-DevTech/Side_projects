@@ -20,315 +20,315 @@ access_log=[('E101','Github','Granted',"2026-01-15"),
              ('E103','Docker','Denied', date.today().strftime('%Y-%m-%d'))]
 #Output Code
 
-# print("="*104)
-# print(f"   Company: {company} | HQ: {hq} | Est: {est}".center(100))
-# print(f"   Security Cert: {standard}".center(90))
-# print("="*104)
+print("="*104)
+print(f"   Company: {company} | HQ: {hq} | Est: {est}".center(100))
+print(f"   Security Cert: {standard}".center(90))
+print("="*104)
 
-# print(f"Total Tools: {len(tools)}")
-# print(f"Total Roles: {len(roles)}")
-# print(f"Employees Registered: {len(employees)}")
-# print("="*104)
+print(f"Total Tools: {len(tools)}")
+print(f"Total Roles: {len(roles)}")
+print(f"Employees Registered: {len(employees)}")
+print("="*104)
 
-# print(f"Available Tools :{tools}")
-# print(f"Valid Roles     :{roles}".title())
-# print(f"Role Permissions:")
-# print(f"  Intern    --> {role_perm['intern']}\n  Developer --> {role_perm['intern']}\n  Tester    --> {role_perm['developer']}\n  Manager   --> {role_perm['manager']}\n  Admin     --> {role_perm['admin']}")
-# print(f"Existing Employees:\n  E101 | {employees['E101']['name']} | {employees['E101']['role'].title()} | Access: {employees['E101']['access']}\n  E102 | {employees['E102']['name']} | {employees['E102']['role'].title()} | Access: {employees['E102']['access']}")
-# print(f"Access Log:\n  {access_log[0]}\n  {access_log[1]}")
-# print("="*104)
+print(f"Available Tools :{tools}")
+print(f"Valid Roles     :{roles}".title())
+print(f"Role Permissions:")
+print(f"  Intern    --> {role_perm['intern']}\n  Developer --> {role_perm['intern']}\n  Tester    --> {role_perm['developer']}\n  Manager   --> {role_perm['manager']}\n  Admin     --> {role_perm['admin']}")
+print(f"Existing Employees:\n  E101 | {employees['E101']['name']} | {employees['E101']['role'].title()} | Access: {employees['E101']['access']}\n  E102 | {employees['E102']['name']} | {employees['E102']['role'].title()} | Access: {employees['E102']['access']}")
+print(f"Access Log:\n  {access_log[0]}\n  {access_log[1]}")
+print("="*104)
 
 #Phase 2
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# while (1==1):
-#   name_input=input("Enter employees full name: ").strip().title()
-#   if name_input.isdigit():
-#     print(f"Only first name and last name is allowed..")
-#   name_parts=name_input.split()
-#   if len(name_parts)<2:
-#     print(f"Enter your full name including first and last..")
-#   else:
-#     first_name=name_parts[0]
-#     last_name=name_parts[1]
-#     if first_name.isalpha() and last_name.isalpha():
-#         print("Valid name continuing further...")
-#         name=" ".join(name_parts)
-#         break
-#     else:
-#         print(f"Invalid name, Name must contain only alphabets.")
-# #------------------------------------------------------------------------------------------------------------------------------------------------------------------
+while (1==1):
+  name_input=input("Enter employees full name: ").strip().title()
+  if name_input.isdigit():
+    print(f"Only first name and last name is allowed..")
+  name_parts=name_input.split()
+  if len(name_parts)<2:
+    print(f"Enter your full name including first and last..")
+  else:
+    first_name=name_parts[0]
+    last_name=name_parts[1]
+    if first_name.isalpha() and last_name.isalpha():
+        print("Valid name continuing further...")
+        name=" ".join(name_parts)
+        break
+    else:
+        print(f"Invalid name, Name must contain only alphabets.")
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# for i in range(5,0,-1):
-#   emp_id=input("Enter employees ID (only numbers): ")
-#   if emp_id[1:].isdigit() and len(emp_id)==3:
-#     emp_id="E"+emp_id
-#     if emp_id in employees:
-#        print(f"Enter a unique id as the {emp_id} already exists..\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")
-#     elif emp_id not in employees:
-#        print("Valid ID proceeding further...")
-#        break
-#   else:
-#       print(f"Invalid ID,\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")
-# #------------------------------------------------------------------------------------------------------------------------------------------------------------------
+for i in range(5,0,-1):
+  emp_id=input("Enter employees ID (only numbers): ")
+  if emp_id[1:].isdigit() and len(emp_id)==3:
+    emp_id="E"+emp_id
+    if emp_id in employees:
+       print(f"Enter a unique id as the {emp_id} already exists..\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")
+    elif emp_id not in employees:
+       print("Valid ID proceeding further...")
+       break
+  else:
+      print(f"Invalid ID,\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# for i in range(5,0,-1):
-#   role=input("Enter Employees Role: ").lower().strip()
-#   if role in roles:
-#     print("Valid Role continue..")
-#     break
-#   else:
-#     print(f"Invalid Role, Choose from {roles}\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")
+for i in range(5,0,-1):
+  role=input("Enter Employees Role: ").lower().strip()
+  if role in roles:
+    print("Valid Role continue..")
+    break
+  else:
+    print(f"Invalid Role, Choose from {roles}\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")
 
-# auto_gen_email=(first_name+"."+last_name+"@nvidia.com").lower()
-# auto_password=(first_name[0:3].lower()+emp_id[1:]+"@TN")
-# print(f"Employees Autogenerated Email is: {auto_gen_email}")
-# print(f"Password: {auto_password}")
-# #------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# for i in range(5,0,-1):
-#   experience=input("Enter years of experience: ")
-#   if experience.isalpha():
-#     print(f"Enter in digits\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")
-#   elif experience.isdigit():
-#      print("Valid.")
-#      experience=int(experience)
-#      if experience<0:
-#         print("Experience can't be negative")
+auto_gen_email=(first_name+"."+last_name+"@nvidia.com").lower()
+auto_password=(first_name[0:3].lower()+emp_id[1:]+"@TN")
+print(f"Employees Autogenerated Email is: {auto_gen_email}")
+print(f"Password: {auto_password}")
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------
+for i in range(5,0,-1):
+  experience=input("Enter years of experience: ")
+  if experience.isalpha():
+    print(f"Enter in digits\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")
+  elif experience.isdigit():
+     print("Valid.")
+     experience=int(experience)
+     if experience<0:
+        print("Experience can't be negative")
 
-#      elif experience==0:
-#         print("Fresher.. Mentor will be assigned.")
-#         break
-#      elif experience>=1 and experience<=3:
-#         print("Junior Level")
-#         break
-#      elif experience>=4 and experience<=7:
-#         print("Mid Level")
-#         break
-#      elif experience>=8:
-#         print("Senior Level")
-#         break
-#   else:
-#     print(f"Enter in digits,\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")      #\033[1m and \033[0m is used for bold characters
+     elif experience==0:
+        print("Fresher.. Mentor will be assigned.")
+        break
+     elif experience>=1 and experience<=3:
+        print("Junior Level")
+        break
+     elif experience>=4 and experience<=7:
+        print("Mid Level")
+        break
+     elif experience>=8:
+        print("Senior Level")
+        break
+  else:
+    print(f"Enter in digits,\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")      #\033[1m and \033[0m is used for bold characters
 
-# if role=="intern" or "developer" or "tester" or "manager" or "admin":
-#   access=['Slack']
+if role=="intern" or "developer" or "tester" or "manager" or "admin":
+  access=['Slack']
 
-# employees[emp_id]={"name":name,"role":role,"access":access,"gmail":auto_gen_email}
-# perm_onboarding_rec=(emp_id,name,role,'2026-06-03')
-# #==========================================================================================================================================================
-# #Output
+employees[emp_id]={"name":name,"role":role,"access":access,"gmail":auto_gen_email}
+perm_onboarding_rec=(emp_id,name,role,'2026-06-03')
+#==========================================================================================================================================================
+#Output
 
-# print("="*100)
-# print("ONBOARDING COMPLETE".center(100))
-# print(f" Name    : {name}")
-# print(f" ID      : {emp_id}")
-# print(f" Role    : {(role).title()}")
-# print(f" Email   : {auto_gen_email}")
-# print(f" Password: {auto_password}")
-# print(f" Access  : {(access)}")
-# print("="*100)
-# print(f" Permanent Record: {perm_onboarding_rec}")
-# print(f" Record Type: {type(perm_onboarding_rec)}")
-# print("="*100)
+print("="*100)
+print("ONBOARDING COMPLETE".center(100))
+print(f" Name    : {name}")
+print(f" ID      : {emp_id}")
+print(f" Role    : {(role).title()}")
+print(f" Email   : {auto_gen_email}")
+print(f" Password: {auto_password}")
+print(f" Access  : {(access)}")
+print("="*100)
+print(f" Permanent Record: {perm_onboarding_rec}")
+print(f" Record Type: {type(perm_onboarding_rec)}")
+print("="*100)
 
 
-# employee_id=input("Enter your Employee ID: ").upper().strip()
-# emp=employees.get(employee_id)
-# emp_role=emp['role']
-# def req_tool():
-#   print(f"Available tools: {role_perm[emp_role]}")
-#   tool_req=input("Enter the tool you want access to: ").strip()
-#   if tool_req in emp['access']:
-#     print("You already have access to the tool")
-#   elif tool_req in role_perm[emp_role]:
-#     emp['access'].append(tool_req)
-#     grant_log = (employee_id, tool_req, 'GRANTED', date.today().strftime('%Y-%m-%d'))
-#     print(f"\n\033[1mAccess granted {tool_req} tool to {emp['name']}.\033[0m")
-#     print(f"   Updated access: {emp['access']}")
-#     print(f"   Total tools: {len(emp['access'])}")
-#     print(f"   Grant logged: {grant_log}")
+employee_id=input("Enter your Employee ID: ").upper().strip()
+emp=employees.get(employee_id)
+emp_role=emp['role']
+def req_tool():
+  print(f"Available tools: {role_perm[emp_role]}")
+  tool_req=input("Enter the tool you want access to: ").strip()
+  if tool_req in emp['access']:
+    print("You already have access to the tool")
+  elif tool_req in role_perm[emp_role]:
+    emp['access'].append(tool_req)
+    grant_log = (employee_id, tool_req, 'GRANTED', date.today().strftime('%Y-%m-%d'))
+    print(f"\n\033[1mAccess granted {tool_req} tool to {emp['name']}.\033[0m")
+    print(f"   Updated access: {emp['access']}")
+    print(f"   Total tools: {len(emp['access'])}")
+    print(f"   Grant logged: {grant_log}")
     
-#   else:
-#     denial_log= (employee_id, tool_req, 'DENIED', date.today().strftime('%Y-%m-%d'))
-#     print(f"Registered Employee IDs: {employees.keys()}")
-#     print(f"\nWelcome {emp['name']}!")
-#     print(f"Current role: {emp['role']}")
-#     print(f'Current access: {emp['access']}')
-#     print(f"\n\033[1mAccess Denied. {emp['role']} are not permitted to use {tool_req}\033[0m")
-#     print(f"   Your role allows: {role_perm[emp_role]}")
-#     print(f"   Denial Logged: {denial_log}")
+  else:
+    denial_log= (employee_id, tool_req, 'DENIED', date.today().strftime('%Y-%m-%d'))
+    print(f"Registered Employee IDs: {employees.keys()}")
+    print(f"\nWelcome {emp['name']}!")
+    print(f"Current role: {emp['role']}")
+    print(f'Current access: {emp['access']}')
+    print(f"\n\033[1mAccess Denied. {emp['role']} are not permitted to use {tool_req}\033[0m")
+    print(f"   Your role allows: {role_perm[emp_role]}")
+    print(f"   Denial Logged: {denial_log}")
 
 
-# if emp is None:
-#   print(f"No employee found with ID: {employee_id}")
+if emp is None:
+  print(f"No employee found with ID: {employee_id}")
 
-# else:
-#     print(f"Current role: {emp['role']}")
-#     print(f'Current access: {emp['access']}')
-#     if emp_role=='intern':
-#       req_tool()
-#     elif emp_role=='developer':
-#       req_tool()
-#     elif emp_role=='tester':
-#       req_tool()
-#     elif emp_role=='manager':
-#       req_tool()
-#     elif emp_role=='admin':
-#       req_tool()
+else:
+    print(f"Current role: {emp['role']}")
+    print(f'Current access: {emp['access']}')
+    if emp_role=='intern':
+      req_tool()
+    elif emp_role=='developer':
+      req_tool()
+    elif emp_role=='tester':
+      req_tool()
+    elif emp_role=='manager':
+      req_tool()
+    elif emp_role=='admin':
+      req_tool()
 
-# aarav_access=set(employees['E101']['access'])
-# sneha_access=set(employees['E102']['access'])
-# tools_set=set(tools)
+aarav_access=set(employees['E101']['access'])
+sneha_access=set(employees['E102']['access'])
+tools_set=set(tools)
 
-# common_tools=aarav_access & sneha_access
-# difference=aarav_access - sneha_access
-# difference_1=sneha_access - aarav_access
-# union=sneha_access | aarav_access
-# exclusive_tools=aarav_access ^ sneha_access
-# tools_set.add('Kubernetes')
-# tools_set.add('Slack')
-# unused_tools=tools_set - union
-# subset_check=sneha_access.issubset(aarav_access)
-# superset_check=aarav_access.issuperset(sneha_access)
-# disjoint_check=sneha_access.isdisjoint(aarav_access)
-
-
-# bug_list=["Slack","Jira","Slack","GitHub","Jira"]
-# bug_set=set(bug_list)
-# clean_list=list(bug_set)
+common_tools=aarav_access & sneha_access
+difference=aarav_access - sneha_access
+difference_1=sneha_access - aarav_access
+union=sneha_access | aarav_access
+exclusive_tools=aarav_access ^ sneha_access
+tools_set.add('Kubernetes')
+tools_set.add('Slack')
+unused_tools=tools_set - union
+subset_check=sneha_access.issubset(aarav_access)
+superset_check=aarav_access.issuperset(sneha_access)
+disjoint_check=sneha_access.isdisjoint(aarav_access)
 
 
-# print(f"Tools both have   :{common_tools}")
-# print(f"Only Aarav has    :{difference}")
-# print(f"Only Sneha has    :{difference_1}")
-# print(f"Combined access   :{union}")
-# print(f"Exclusive tools   :{exclusive_tools}")
-# print(f"Unused tools      :{unused_tools}")
-# print(f"   Company is paying for {len(unused_tools)} tools!")
-# if subset_check:
-#     print(f"\nSneha's access is a SUBSET of Aarav's")
-# else:
-#     print(f"\nSneha's access is NOT a SUBSET of Aarav's")
-# if superset_check:
-#     print(f"Aarav's access is SUPERSET of Sneha's ")
-# else:
-#     print(f"Aarav's access is NOT a SUPERSET of Sneha's ")
-# if disjoint_check:
-#     print(f"Their access doesn't overlap (is disjoint)")
-# else:
-#     print(f"Their access overlaps (not disjoint)")
-# print(f"\nBuggy List :{bug_list}")
-# print(f"Cleaned    :{clean_list}")
+bug_list=["Slack","Jira","Slack","GitHub","Jira"]
+bug_set=set(bug_list)
+clean_list=list(bug_set)
+
+
+print(f"Tools both have   :{common_tools}")
+print(f"Only Aarav has    :{difference}")
+print(f"Only Sneha has    :{difference_1}")
+print(f"Combined access   :{union}")
+print(f"Exclusive tools   :{exclusive_tools}")
+print(f"Unused tools      :{unused_tools}")
+print(f"   Company is paying for {len(unused_tools)} tools!")
+if subset_check:
+    print(f"\nSneha's access is a SUBSET of Aarav's")
+else:
+    print(f"\nSneha's access is NOT a SUBSET of Aarav's")
+if superset_check:
+    print(f"Aarav's access is SUPERSET of Sneha's ")
+else:
+    print(f"Aarav's access is NOT a SUPERSET of Sneha's ")
+if disjoint_check:
+    print(f"Their access doesn't overlap (is disjoint)")
+else:
+    print(f"Their access overlaps (not disjoint)")
+print(f"\nBuggy List :{bug_list}")
+print(f"Cleaned    :{clean_list}")
 
 #Phase 5
-# employee_id=input("Enter Employee ID: ").strip().title()
-# tool_remove=input("Enter Tool you want to revoke access to: ").strip()
-# emp=employees.get(employee_id)
-# if employee_id in employees:
-#     if tool_remove in tools and tool_remove in employees[employee_id]['access']:
-#         pos=emp["access"].index(tool_remove)
-#         print(f"Found {tool_remove} at position {pos}")
-#         print(f"   {tool_remove} access revoked from {emp['name']}")
-#         emp['access'].remove(tool_remove)
-#         revoke_log=(employee_id,tool_remove,"REVOKED", date.today().strftime('%Y-%m-%d'))
-#         access_log.append(revoke_log)
-#         print(f"   Updated access list for {emp['name']}: {emp['access']}")
-#         print(f"   Revocation Logged: {revoke_log}")
-#         print(f"\n\033[1m{"--- ACCESS LOG ANALYSIS ---".center(150)}\033[0m")
-#         print(f"Total log entries: {len(access_log)}\nFirst Entry: {access_log[0]}\nLast Entry: {access_log[-1]}\nRecent Entry: {access_log[-3:]}")
-#         sorted_log=sorted(access_log)
-#         reversed_log=access_log.copy()
-#         print(f"\nSorted log:{sorted_log}")
-#         reversed_log.reverse()
-#         print(f"Reversed log:{reversed_log}")
-#         popped_entry=reversed_log.pop()
-#         print(f"Popped entry:{popped_entry}")
-#         audit_marker_tuple=("SYSTEM", "AUDIT", "STARTED", date.today().strftime('%Y-%m-%d'))
-#         access_log.insert(0,audit_marker_tuple)
-#         print(f"After insert:{access_log[0]}")
-#     else:
-#         print(f"Employee doesn't have access to {tool_remove}")
-# else:
-#     print(f"Employee ID {employee_id} not registered as Employee")
+employee_id=input("Enter Employee ID: ").strip().title()
+tool_remove=input("Enter Tool you want to revoke access to: ").strip()
+emp=employees.get(employee_id)
+if employee_id in employees:
+    if tool_remove in tools and tool_remove in employees[employee_id]['access']:
+        pos=emp["access"].index(tool_remove)
+        print(f"Found {tool_remove} at position {pos}")
+        print(f"   {tool_remove} access revoked from {emp['name']}")
+        emp['access'].remove(tool_remove)
+        revoke_log=(employee_id,tool_remove,"REVOKED", date.today().strftime('%Y-%m-%d'))
+        access_log.append(revoke_log)
+        print(f"   Updated access list for {emp['name']}: {emp['access']}")
+        print(f"   Revocation Logged: {revoke_log}")
+        print(f"\n\033[1m{"--- ACCESS LOG ANALYSIS ---".center(150)}\033[0m")
+        print(f"Total log entries: {len(access_log)}\nFirst Entry: {access_log[0]}\nLast Entry: {access_log[-1]}\nRecent Entry: {access_log[-3:]}")
+        sorted_log=sorted(access_log)
+        reversed_log=access_log.copy()
+        print(f"\nSorted log:{sorted_log}")
+        reversed_log.reverse()
+        print(f"Reversed log:{reversed_log}")
+        popped_entry=reversed_log.pop()
+        print(f"Popped entry:{popped_entry}")
+        audit_marker_tuple=("SYSTEM", "AUDIT", "STARTED", date.today().strftime('%Y-%m-%d'))
+        access_log.insert(0,audit_marker_tuple)
+        print(f"After insert:{access_log[0]}")
+    else:
+        print(f"Employee doesn't have access to {tool_remove}")
+else:
+    print(f"Employee ID {employee_id} not registered as Employee")
 
 #Phase 6
 
-# employee_id=input("Enter your id: ").title().strip()
-# emp_id=employees.get(employee_id)
-# if emp_id is None:
-#     print("Invalid Employee Id")
-# else:
-#     print(f"   Fields:            {emp_id.items()}")
-#     print(f"   Available Fields:  {emp_id.keys()}")
+employee_id=input("Enter your id: ").title().strip()
+emp_id=employees.get(employee_id)
+if emp_id is None:
+    print("Invalid Employee Id")
+else:
+    print(f"   Fields:            {emp_id.items()}")
+    print(f"   Available Fields:  {emp_id.keys()}")
 
-#     new_role=input("Enter new role (or press Enter to skip): ").strip().lower()
-#     emp_id.setdefault("phone", "Not Provided")
-#     role_changed=False
-#     phone_changed=False
-#     remove_field=""
-#     removed=None
+    new_role=input("Enter new role (or press Enter to skip): ").strip().lower()
+    emp_id.setdefault("phone", "Not Provided")
+    role_changed=False
+    phone_changed=False
+    remove_field=""
+    removed=None
 
-#     if new_role == "":
-#         print("Role: Not changed")
-#     elif new_role not in roles:
-#         print(f"Invalid role choose from {roles}")
-#         new_role=""
-#         print("Role: Not changed")
-#     else:
-#         emp_id.update({"role":new_role})
-#         role_changed=True
-#         print(f"\nRole update to {new_role}")
-#         print(f"   Access to tools:   {role_perm[new_role]}")
+    if new_role == "":
+        print("Role: Not changed")
+    elif new_role not in roles:
+        print(f"Invalid role choose from {roles}")
+        new_role=""
+        print("Role: Not changed")
+    else:
+        emp_id.update({"role":new_role})
+        role_changed=True
+        print(f"\nRole update to {new_role}")
+        print(f"   Access to tools:   {role_perm[new_role]}")
 
-#     phone_no=input("Enter your phone number (press Enter if already provided): ").strip()
-#     if phone_no == "":
-#         print("Phone: Not changed")
-#     elif len(phone_no) != 10 or not phone_no.isdigit():
-#         print("Phone number should be 10 digits")
-#     else:
-#         emp_id["phone"]=phone_no
-#         phone_changed=True
-#         print(f"\nPhone: {phone_no}")
-#         print(f"   Phone updated: {phone_no}")
+    phone_no=input("Enter your phone number (press Enter if already provided): ").strip()
+    if phone_no == "":
+        print("Phone: Not changed")
+    elif len(phone_no) != 10 or not phone_no.isdigit():
+        print("Phone number should be 10 digits")
+    else:
+        emp_id["phone"]=phone_no
+        phone_changed=True
+        print(f"\nPhone: {phone_no}")
+        print(f"   Phone updated: {phone_no}")
 
-#     remove_field=input("Enter field name to remove or press Enter to skip: ").strip()
-#     if remove_field == "":
-#         print("Removed: No field removed")
-#     else:
-#         removed=emp_id.pop(remove_field, "Field Not Found")
-#         print(f"\n   Removed: {remove_field} was removed {removed}")
+    remove_field=input("Enter field name to remove or press Enter to skip: ").strip()
+    if remove_field == "":
+        print("Removed: No field removed")
+    else:
+        removed=emp_id.pop(remove_field, "Field Not Found")
+        print(f"\n   Removed: {remove_field} was removed {removed}")
 
-#     print(f"\nCurrent record for {emp_id['name']}:")
-#     print(f"   Fields:           {emp_id.items()}")
-#     print(f"   Available Fields: {emp_id.keys()}")
-#     if not role_changed:
-#         print("\nRole: Not changed")
-#         print(f"   Access: {emp_id['access']}")
-#     if not phone_changed:
-#         print("\nPhone: Not changed")
-#     if remove_field == "":
-#         print("\nRemoved: No field removed")
-#     print("Updated record:")
-#     print(f"Keys:    {emp_id.items()}")
-#     print(f"Values:  {emp_id.keys()}")
+    print(f"\nCurrent record for {emp_id['name']}:")
+    print(f"   Fields:           {emp_id.items()}")
+    print(f"   Available Fields: {emp_id.keys()}")
+    if not role_changed:
+        print("\nRole: Not changed")
+        print(f"   Access: {emp_id['access']}")
+    if not phone_changed:
+        print("\nPhone: Not changed")
+    if remove_field == "":
+        print("\nRemoved: No field removed")
+    print("Updated record:")
+    print(f"Keys:    {emp_id.items()}")
+    print(f"Values:  {emp_id.keys()}")
 
 #Phase 7
-# aarav_access=employees['E101']['access']
-# riya_access=aarav_access.copy()
-# riya_access.append("Production Server")
-# print(f"Aarav's Access={aarav_access}")
-# print(f"Riya's Access={riya_access}")
-# print(id(aarav_access))
-# print(id(riya_access))
-# print(aarav_access is riya_access)
-# i=list(aarav_access)
-# l=aarav_access[:]
-# print(i,l)
-# print(i is l)
-# aarav_backup=employees['E101'].copy()
-# aarav_access_copy=employees['E101']['access'].copy()
-# aarav_access_copy.append("Docker")
-# print(aarav_access_copy,aarav_access)
+aarav_access=employees['E101']['access']
+riya_access=aarav_access.copy()
+riya_access.append("Production Server")
+print(f"Aarav's Access={aarav_access}")
+print(f"Riya's Access={riya_access}")
+print(id(aarav_access))
+print(id(riya_access))
+print(aarav_access is riya_access)
+i=list(aarav_access)
+l=aarav_access[:]
+print(i,l)
+print(i is l)
+aarav_backup=employees['E101'].copy()
+aarav_access_copy=employees['E101']['access'].copy()
+aarav_access_copy.append("Docker")
+print(aarav_access_copy,aarav_access)
 
 #Final Dashboard & Report
 print(f"\033[1mACCESS GUARD - FINAL REPORT\033[0m".center(98,"="))
