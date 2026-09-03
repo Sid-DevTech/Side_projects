@@ -53,9 +53,68 @@ def add_book():
 
 
 def read_book():
-    with open("book_data.txt","r")as f: 
-        book_data=f.readlines()
-    return book_data
+    try:
+        with open("book_data.txt","r")as f: 
+            book_data=f.readlines()
+        return book_data
+    except FileNotFoundError:
+        book_data=[]
+        return book_data
+
+def view_book():
+    book_data=read_book()
+    if len(book_data)==0:
+        print(Fore.RED+"No book in the database")
+    else:
+        for i in book_data:
+            i=i.replace(" ","")
+            i=i.replace(","," ").split()
+            print(Fore.CYAN+f"Book Id: {i[0]} | Book Name: {i[1]} | Book Author: {i[2]} | Book Quantity: {i[3]}")
+
+def search_book(value):
+    book_data=read_book()
+    if len(book_data)==0:
+        print(Fore.RED+"There is no book in the database")
+    else:
+        if value.isdigit():
+            for i in book_data:
+                i=i.replace(" ","")
+                i=i.replace(","," ").split()
+                if value==i[0]:
+                    print(Fore.LIGHTBLUE_EX+f"Book Id: {i[0]} | Book Name: {i[1]} | Book Author: {i[2]} | Book Quantity: {i[3]}")
+                    break
+                else:
+                    print(Fore.RED+f"No book is registered with the id {value}")     
+                    return i   
+        else:
+            for i in book_data:
+                i=i.replace(" ","")
+                i=i.replace(","," ").split()
+                if value.replace(" ","")==i[1].lower():
+                    print(Fore.LIGHTBLUE_EX+f"Book Id: {i[0]} | Book Name: {i[1]} | Book Author: {i[2]} | Book Quantity: {i[3]}")
+                    break
+                else:
+                    print(Fore.RED+f"No book is registered with the name {value}")
+                    return i
+                
+def register_user():
+    while True:
+        user_id=input("Enter User Id: ").strip()
+        if user_id.isdigit():
+            user_id=int(user_id)
+            if user_id>0:
+                pass
+            else:
+                print(Fore.RED+"Invalid Id entered")
+        user_name=input("Enter user's name: ").strip().title()
+        user_contact=input("Enter contact number: ").strip()
+        if len(user_contact)!=10:
+            print(Fore.RED+"Invalid number (must be 10 digits)")
+        else:
+            with open("reg_user.txt","a") as f:
+                f.write(f"{user_id},{user_name},{user_contact}\n")
+                print(Fore.LIGHTGREEN_EX+"User Sucessfully added")
+                break
 
 
 
@@ -65,15 +124,15 @@ while True:
     if choice=="1":
         add_book()
     elif choice=="2":
-        print("View Books")
+        view_book()
     elif choice=="3":
-        print("Search Book")
+        val=input("Enter a book id or name: ").strip().lower()
+        search_book(val)
     elif choice=="4":
-        print("Register Book")
+        register_user()
     elif choice=="5":
         print("Issue Book")
     elif choice=="6":
-        print("Exit")
         break
     else:
         print(Fore.RED+"Invalid Choice entered\nEnter a number from 1 to 6")
