@@ -1,213 +1,312 @@
+from datetime import datetime
+def cur_date():
+   now = datetime.now()
+   format_1=now.strftime("%Y-%m-%d %H:%M:%S")
+   return format_1
 #Phase 1
 tools = ['Slack','Jira','GitHub','AWS','HR Portal','Docker','Figma','Production Server']
 roles = ('intern', 'developer', 'tester', 'manager', 'admin')
 company_info= ('Nvidia', "Santa Clara", 1993, "ISO 27001 Certified")
 company,hq,est,standard=company_info
 role_perm = {'intern':['Slack','Jira'],
-             'developer':['Slack','Jira','GitHub','AWS'],
-             'tester':['Slack','Jira','GitHub','Docker'],
-             'manager':['Slack','Jira','GitHub','AWS','HR Portal'],
-             'admin':['Slack','Jira','GitHub','AWS','HR Portal','Docker','Figma','Production Server']}
+            'developer':['Slack','Jira','GitHub','AWS'],
+            'tester':['Slack','Jira','GitHub','Docker'],
+            'manager':['Slack','Jira','GitHub','AWS','HR Portal'],
+            'admin':['Slack','Jira','GitHub','AWS','HR Portal','Docker','Figma','Production Server']}
 employees={
     "E101":{'name':'Aarav Sharma','role':'developer','access':['Slack'],'gmail':'aarav.sharma@nvidia.com'},
     "E102":{'name':'Sneha Patil','role':'intern','access':['Slack'],'gmail':'sneha.patil@nvidia.com'}}
 access_log=[('E101','Github','Granted',"2026-01-15"),
-             ('E102','AWS','Denied','2026-02-10')]
+            ('E102','AWS','Denied','2026-02-10')]
 #Output Code
+def phase_1():
+  print("="*104)
+  print(f"   Company: {company} | HQ: {hq} | Est: {est}".center(100))
+  print(f"   Security Cert: {standard}".center(90))
+  print("="*104)
 
-# print("="*104)
-# print(f"   Company: {company} | HQ: {hq} | Est: {est}".center(100))
-# print(f"   Security Cert: {standard}".center(90))
-# print("="*104)
+  print(f"Total Tools: {len(tools)}")
+  print(f"Total Roles: {len(roles)}")
+  print(f"Employees Registered: {len(employees)}")
+  print("="*104)
 
-# print(f"Total Tools: {len(tools)}")
-# print(f"Total Roles: {len(roles)}")
-# print(f"Employees Registered: {len(employees)}")
-# print("="*104)
-
-# print(f"Available Tools :{tools}")
-# print(f"Valid Roles     :{roles}".title())
-# print(f"Role Permissions:")
-# print(f"  Intern    --> {role_perm['intern']}\n  Developer --> {role_perm['intern']}\n  Tester    --> {role_perm['developer']}\n  Manager   --> {role_perm['manager']}\n  Admin     --> {role_perm['admin']}")
-# print(f"Existing Employees:\n  E101 | {employees["E101"]['name']} | {employees["E101"]['role'].title()} | Access: {employees["E101"]['access']}\n  E102 | {employees["E102"]['name']}  | {employees["E102"]['role'].title()}    | Access: {employees["E102"]['access']}")
-# print(f"Access Log:\n  {access_log[0]}\n  {access_log[1]}")
-# print("="*104)
+  print(f"Available Tools :{tools}")
+  print(f"Valid Roles     :{roles}".title())
+  print(f"Role Permissions:")
+  print(f"  Intern    --> {role_perm['intern']}\n  Developer --> {role_perm['intern']}\n  Tester    --> {role_perm['developer']}\n  Manager   --> {role_perm['manager']}\n  Admin     --> {role_perm['admin']}")
+  print(f"Existing Employees:\n  E101 | {employees["E101"]['name']} | {employees["E101"]['role'].title()} | Access: {employees["E101"]['access']}\n  E102 | {employees["E102"]['name']}  | {employees["E102"]['role'].title()}    | Access: {employees["E102"]['access']}")
+  print(f"Access Log:\n  {access_log[0]}\n  {access_log[1]}")
+  print("="*104)
 
 # #Phase 2
 # #Name input
 # #Till admin enters correct name
 # #------------------------------------------------------------------------------------------------------------------------------------------------------------------
+def phase_2():
+  while (1==1):
+    name_input=input("Enter employees full name: ").strip().title()
+    if name_input.isdigit():
+      print(f"Only first name and last name is allowed..")
+    name_parts=name_input.split()
+    if len(name_parts)<2:
+      print(f"Enter your full name including first and last..")
+    else:
+      first_name=name_parts[0]
+      last_name=name_parts[1]
+      if first_name.isalpha() and last_name.isalpha():
+          print("Valid name continuing further...")
+          name=" ".join(name_parts)
+          break
+      else:
+          print(f"Invalid name, Name must contain only alphabets.")
+  #------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  #Employee id input
+  #5 attempts
+  for i in range(5,0,-1):
+    emp_id=input("Enter employees ID (only numbers): ")
+    if emp_id[1:].isdigit() and len(emp_id)==3:
+      emp_id="E"+emp_id
+      if emp_id in employees:
+        print(f"Enter a unique id as the {emp_id} already exists..\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")
+      elif emp_id not in employees:
+        print("Valid ID proceeding further...")
+        break
+    else:
+        print(f"Invalid ID,\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")
+  #------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  #Role input
+  #auto gen email and pass
+  #5 Attempts
+  for i in range(5,0,-1):
+    role=input("Enter Employees Role: ").lower().strip()
+    if role in roles:
+      print("Valid Role continue..")
+      break
+    else:
+      print(f"Invalid Role, Choose from {roles}\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")
 
-# while (1==1):
-#   name_input=input("Enter employees full name: ").strip().title()
-#   if name_input.isdigit():
-#     print(f"Only first name and last name is allowed..")
-#   name_parts=name_input.split()
-#   if len(name_parts)<2:
-#     print(f"Enter your full name including first and last..")
-#   else:
-#     first_name=name_parts[0]
-#     last_name=name_parts[1]
-#     if first_name.isalpha() and last_name.isalpha():
-#         print("Valid name continuing further...")
-#         name=" ".join(name_parts)
-#         break
-#     else:
-#         print(f"Invalid name, Name must contain only alphabets.")
-# #------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# #Employee id input
-# #5 attempts
-# for i in range(5,0,-1):
-#   emp_id=input("Enter employees ID (only numbers): ")
-#   if emp_id[1:].isdigit() and len(emp_id)==3:
-#     emp_id="E"+emp_id
-#     if emp_id in employees:
-#        print(f"Enter a unique id as the {emp_id} already exists..\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")
-#     elif emp_id not in employees:
-#        print("Valid ID proceeding further...")
-#        break
-#   else:
-#       print(f"Invalid ID,\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")
-# #------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# #Role input
-# #auto gen email and pass
-# #5 Attempts
-# for i in range(5,0,-1):
-#   role=input("Enter Employees Role: ").lower().strip()
-#   if role in roles:
-#     print("Valid Role continue..")
-#     break
-#   else:
-#     print(f"Invalid Role, Choose from {roles}\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")
+  auto_gen_email=(first_name+"."+last_name+"@nvidia.com").lower()
+  auto_password=(first_name[0:3].lower()+emp_id[1:]+"@TN")
+  print(f"Employees Autogenerated Email is: {auto_gen_email}")
+  print(f"Password: {auto_password}")
+  #------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  #Years of Experience
+  #5 attempts
+  for i in range(5,0,-1):
+    experience=input("Enter years of experience: ")
+    if experience.isalpha():
+      print(f"Enter in digits\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")
+    elif experience.isdigit():
+      print("Valid.")
+      experience=int(experience)
+      if experience<0:
+          print("Experience can't be negative")
 
-# auto_gen_email=(first_name+"."+last_name+"@nvidia.com").lower()
-# auto_password=(first_name[0:3].lower()+emp_id[1:]+"@TN")
-# print(f"Employees Autogenerated Email is: {auto_gen_email}")
-# print(f"Password: {auto_password}")
-# #------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# #Years of Experience
-# #5 attempts
-# for i in range(5,0,-1):
-#   experience=input("Enter years of experience: ")
-#   if experience.isalpha():
-#     print(f"Enter in digits\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")
-#   elif experience.isdigit():
-#      print("Valid.")
-#      experience=int(experience)
-#      if experience<0:
-#         print("Experience can't be negative")
+      elif experience==0:
+          print("Fresher.. Mentor will be assigned.")
+          break
+      elif experience>=1 and experience<=3:
+          print("Junior Level")
+          break
+      elif experience>=4 and experience<=7:
+          print("Mid Level")
+          break
+      elif experience>=8:
+          print("Senior Level")
+          break
+    else:
+      print(f"Enter in digits,\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")      #\033[1m and \033[0m is used for bold characters
 
-#      elif experience==0:
-#         print("Fresher.. Mentor will be assigned.")
-#         break
-#      elif experience>=1 and experience<=3:
-#         print("Junior Level")
-#         break
-#      elif experience>=4 and experience<=7:
-#         print("Mid Level")
-#         break
-#      elif experience>=8:
-#         print("Senior Level")
-#         break
-#   else:
-#     print(f"Enter in digits,\n\033[1mREMAINING ATTEMPTS:{i}\033[0m")      #\033[1m and \033[0m is used for bold characters
+  if role=="intern" or "developer" or "tester" or "manager" or "admin":
+    access=['Slack']
 
-# if role=="intern" or "developer" or "tester" or "manager" or "admin":
-#   access=['Slack']
+  employees[emp_id]={"name":name,"role":role,"access":access,"gmail":auto_gen_email}
+  perm_onboarding_rec=(emp_id,name,role,'2026-06-03')
+  #==========================================================================================================================================================
+  #Output
 
-# employees[emp_id]={"name":name,"role":role,"access":access,"gmail":auto_gen_email}
-# perm_onboarding_rec=(emp_id,name,role,'2026-06-03')
-#==========================================================================================================================================================
-#Output
-
-# print("="*100)
-# print("ONBOARDING COMPLETE".center(100))
-# print(f" Name    : {name}")
-# print(f" ID      : {emp_id}")
-# print(f" Role    : {(role).title()}")
-# print(f" Email   : {auto_gen_email}")
-# print(f" Password: {auto_password}")
-# print(f" Access  : {(access)}")
-# print("="*100)
-# print(f" Permanent Record: {perm_onboarding_rec}")
-# print(f" Record Type: {type(perm_onboarding_rec)}")
-# print("="*100)
+  print("="*100)
+  print("ONBOARDING COMPLETE".center(100))
+  print(f" Name    : {name}")
+  print(f" ID      : {emp_id}")
+  print(f" Role    : {(role).title()}")
+  print(f" Email   : {auto_gen_email}")
+  print(f" Password: {auto_password}")
+  print(f" Access  : {(access)}")
+  print("="*100)
+  print(f" Permanent Record: {perm_onboarding_rec}")
+  print(f" Record Type: {type(perm_onboarding_rec)}")
+  print("="*100)
 
 
 #Tool req (employee portal)
-print(f"Registered Employee IDs: {employees.keys()}")
-employee_id=input("Enter your Employee ID: ").upper().strip()
-emp=employees.get(employee_id)
-emp_role=employees[employee_id]['role']
-def req_tool():
-  print(f"Available tools: {role_perm[emp_role]}")
-  tool_req=input("Enter the tool you want access to: ").strip()
-  if tool_req in emp['access']:
-    print("You already have access to the tool")
-  elif tool_req in role_perm[emp_role]:
-    emp['access'].append(tool_req)
-    print(f"Access granted to the {tool_req} tool.")
+def phase_3():
+  print(f"Registered Employee IDs: {employees.keys()}")
+  employee_id=input("Enter your Employee ID: ").upper().strip()
+  emp=employees.get(employee_id)
+  emp_role=employees[employee_id]['role']
+  def req_tool():
+    print(f"Available tools: {role_perm[emp_role]}")
+    tool_req=input("Enter the tool you want access to: ").strip()
+    if tool_req in emp['access']:
+      print("You already have access to the tool")
+    elif tool_req in role_perm[emp_role]:
+      emp['access'].append(tool_req)
+      print(f"Access granted to the {tool_req} tool.")
+    else:
+      print(f"{emp_role} doesn't have access to {tool_req} or you have perhaps put in incorrect ")
+  if emp is None:
+    print(f"No employee found with ID: {employee_id}")
   else:
-    print(f"{emp_role} doesn't have access to {tool_req} or you have perhaps put in incorrect ")
-if emp is None:
-  print(f"No employee found with ID: {employee_id}")
-else:
-    print(f"\nWelcome {emp['name']}!")
-    print(f"Current role: {emp['role']}")
-    print(f'Current access: {emp['access']}')
-    if emp_role=='intern':
-      req_tool()
-    elif emp_role=='developer':
-      req_tool()
-    elif emp_role=='tester':
-      req_tool()
-    elif emp_role=='manager':
-      req_tool()
-    elif emp_role=='admin':
-      req_tool()
+      print(f"\nWelcome {emp['name']}!")
+      print(f"Current role: {emp['role']}")
+      print(f'Current access: {emp['access']}')
+      if emp_role=='intern':
+        req_tool()
+      elif emp_role=='developer':
+        req_tool()
+      elif emp_role=='tester':
+        req_tool()
+      elif emp_role=='manager':
+        req_tool()
+      elif emp_role=='admin':
+        req_tool()
 
 #Various set checks
-aarav_access=set(employees['E101']['access'])
-sneha_access=set(employees['E102']['access'])
-tools_set=set(tools)
+def phase_4():
+  aarav_access=set(employees['E101']['access'])
+  sneha_access=set(employees['E102']['access'])
+  tools_set=set(tools)
 
-common_tools=aarav_access & sneha_access
-difference=aarav_access - sneha_access
-difference_1=sneha_access - aarav_access
-union=sneha_access | aarav_access
-exclusive_tools=aarav_access ^ sneha_access
-tools_set.add('Kubernetes')
-tools_set.add('Slack')
-unused_tools=tools_set - union
-subset_check=sneha_access.issubset(aarav_access)
-superset_check=aarav_access.issuperset(sneha_access)
-disjoint_check=sneha_access.isdisjoint(aarav_access)
+  common_tools=aarav_access & sneha_access
+  difference=aarav_access - sneha_access
+  difference_1=sneha_access - aarav_access
+  union=sneha_access | aarav_access
+  exclusive_tools=aarav_access ^ sneha_access
+  tools_set.add('Kubernetes')
+  tools_set.add('Slack')
+  unused_tools=tools_set - union
+  subset_check=sneha_access.issubset(aarav_access)
+  superset_check=aarav_access.issuperset(sneha_access)
+  disjoint_check=sneha_access.isdisjoint(aarav_access)
 
 
-bug_list=["Slack","Jira","Slack","GitHub","Jira"]
-bug_set=set(bug_list)
-clean_list=list(bug_set)
+  bug_list=["Slack","Jira","Slack","GitHub","Jira"]
+  bug_set=set(bug_list)
+  clean_list=list(bug_set)
 
-#output
+  #output
 
-print(f"Tools both have   :{common_tools}")
-print(f"Only Aarav has    :{difference}")
-print(f"Only Sneha has    :{difference_1}")
-print(f"Combined access   :{union}")
-print(f"Exclusive tools   :{exclusive_tools}")
-print(f"Unused tools      :{unused_tools}")
-print(f"   Company is paying for {len(unused_tools)} tools!")
-if subset_check:
-    print(f"\nSneha's access is a SUBSET of Aarav's")
-else:
-    print(f"\nSneha's access is NOT a SUBSET of Aarav's")
-if superset_check:
-    print(f"Aarav's access is SUPERSET of Sneha's ")
-else:
-    print(f"Aarav's access is NOT a SUPERSET of Sneha's ")
-if disjoint_check:
-    print(f"Their access doesn't overlap (is disjoint)")
-else:
-    print(f"Their access overlaps (not disjoint)")
-print(f"\nBuggy List :{bug_list}")
-print(f"Cleaned    :{clean_list}")
+  print(f"Tools both have   :{common_tools}")
+  print(f"Only Aarav has    :{difference}")
+  print(f"Only Sneha has    :{difference_1}")
+  print(f"Combined access   :{union}")
+  print(f"Exclusive tools   :{exclusive_tools}")
+  print(f"Unused tools      :{unused_tools}")
+  print(f"   Company is paying for {len(unused_tools)} tools!")
+  if subset_check:
+      print(f"\nSneha's access is a SUBSET of Aarav's")
+  else:
+      print(f"\nSneha's access is NOT a SUBSET of Aarav's")
+  if superset_check:
+      print(f"Aarav's access is SUPERSET of Sneha's ")
+  else:
+      print(f"Aarav's access is NOT a SUPERSET of Sneha's ")
+  if disjoint_check:
+      print(f"Their access doesn't overlap (is disjoint)")
+  else:
+      print(f"Their access overlaps (not disjoint)")
+  print(f"\nBuggy List :{bug_list}")
+  print(f"Cleaned    :{clean_list}")
+
+#Phase 5
+def phase_5():
+  employee_id=input("Enter employee ID: ").strip().title()
+  emp_id=employees.get(employee_id)
+  if emp_id is None:
+    print(f"Employee id {employee_id} does not exist")
+  else:
+    emp_name=employees[employee_id]['name']
+    emp_tool=employees[employee_id]['access']
+    print(f"Employee has access to {emp_tool}")
+    tool_req=input(f"Enter tool to revoke from {emp_name}: ").strip()
+    if tool_req in emp_tool:
+       emp_tool.remove(tool_req)
+       print(f"Revoked accesss to {tool_req} from {emp_name}")
+       print(f"Updated access {emp_tool}")
+       revoke_log= (employee_id, tool_req, "REVOKED", cur_date())
+       access_log.append(revoke_log)
+       print(access_log)
+    else:
+       print(f"{emp_name} does not have access to {tool_req}")
+
+def phase_6():
+  emp_id=input("Enter employee ID: ").strip().capitalize()
+  emp=employees.get(emp_id)
+  if emp is None:
+    print("Invalid Employee ID")
+  else:
+    print(f"Fields: {list(emp.items())}")
+    print(f"Available Fields: {emp.keys()}")
+
+    new_role=input("Update role: ").strip().lower()
+    if new_role!="":
+      if new_role not in roles:
+        print("role not available")
+        print(f"Available roles: {roles}")
+      else:
+        emp.update({"role": new_role, "access": "Slack"})
+        print(f"Updated role: {new_role}")
+    emp.setdefault("phone", "Not Provided")
+    phone=input("Enter phone number: ").strip()
+    if phone!="":
+      if not phone.isdigit() or len(phone)!=10:
+        print("Invalid Phone Number")
+      else:
+        emp["phone"]=phone
+
+    field_rem=input("Enter a field to remove: ").strip()
+    if field_rem!="":
+      removed= emp.pop(field_rem, "Field Not Found")
+      print(f"Removed '{field_rem}': was '{removed}'")
+      print(f"Keys: {emp.keys()}\n Values: {emp.values()}")
+
+
+#MAIN
+def menu():
+   print("""Choose From The Options Below:
+1. Welcome Banner
+2. Onboard Employee
+3. Access Req Portal
+4. Tool Comparision & Audit
+5. Revoke Access & Log Analysis
+6. Update Employee Record
+7. Clone Employee Record
+8. Final Dashboard & Report
+9. Exit""")
+
+while True:
+  menu()
+  choice=input("Enter a choice: ").strip()
+  if choice =="1":
+     phase_1()
+  elif choice =="2":
+     phase_2()
+  elif choice =="3":
+     phase_3()
+  elif choice =="4":
+     phase_4()
+  elif choice =="5":
+     phase_5()
+  elif choice =="6":
+     phase_6()
+  elif choice =="7":
+     continue
+     phase_7()
+  elif choice =="8":
+     continue
+     phase_8()
+  elif choice=="9":
+     break
+  else:
+     print("Invalid Choice")
