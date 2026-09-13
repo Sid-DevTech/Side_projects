@@ -9,12 +9,7 @@ console=Console()
 file_name="bank_records.xlsx"
 bank_name=figlet_format("PATREON BANK")
 
-#==================================================================
-#***********************WORKBOOK ACTIVE****************************
-#==================================================================
-def work_book_active():
-    wb=openpyxl.load_workbook(file_name)
-    sheet=wb.active
+
 
 
 
@@ -104,9 +99,10 @@ def create_acc():
 #==============================LOGIN===============================
 #==================================================================
 def acc_login():
-    console.print("[bold black]LOGIN[bold black]")
+    console.print("[bold blackon white]LOGIN[bold black on white]")
 
     account_no=input("Enter account number: ").strip()
+    
     pin=pwinput("Enter PIN: ", mask="*")
     wb = openpyxl.load_workbook(file_name)
     sheet = wb.active
@@ -114,29 +110,59 @@ def acc_login():
         user_name=row[1].title()
         
         
-        if row[0] == int(account_no) and row[2] == int(pin):
+        if str(row[0]) == str((account_no)) and str(row[2]) == str(pin):
             console.print("[yellow on black]Verifying account.....[/yellow on black]")
-            progress_bar(5)
+            progress_bar(1)
             console.print("[bold green]Login Successful[/bold green]")
             console.print(f"[white]Welcome {user_name}[/white]")
-            sub_menu()
-            break
+            sub_menu(account_no)
+            break       
     else:
+        console.print("[yellow on black]Verifying details.....[/yellow on black]")
+        progress_bar(5)
         err_msg("Account id or PIN")
     wb.close()
 
 #==================================================================
 #************************CHECK BALANCE*****************************
 #==================================================================
-def check_bal():
-    work_book_active()
-    for row in sheet.iter_rows(min_row=2,value_only=True):
-        if row[0]==acc_number
+def check_bal(account_no):
+    wb = openpyxl.load_workbook(file_name)
+    sheet = wb.active
+    for row in sheet.iter_rows(min_row=2,values_only=True):
+        if str(row[0])==str(account_no):
+            console.print(f"[gray on cyan]Current Balance: ${row[-2]}[/gray on cyan]")
+            break
+    wb.close()
+
+#==================================================================
+#============================DEPOSIT===============================
+#==================================================================
+def deposit(account_no):
+    wb=openpyxl.load_workbook(file_name)
+    sheet=wb.active
+    for row in sheet.iter_rows(min_row=2,values_only=True):
+        if account_no==str(row[0]):
+            amount= float(input("Enter the amount of money to deposit: "))
+            if amount<0 or amount==0:
+                err_msg("DEPOSIT BALANCE")
+            dt=cur_date()
+            transaction_id=str(uuid.uuid4())[:10]
+            name=row[1]
+            transaction_type="Deposit"
+            prev_bal=row[-2]
+            current_bal=prev_bal+amount
+            sheet.append([account_no,name,None,transaction_id,transaction_type,amount,prev_bal,current_bal,dt])
+            progress_bar(10)
+            console.print(f"[bold green on white]Money deposited successfully \nCurrent Balance: ${current_bal}[/bold green on white]".center(100))
+    wb.save(file_name)
+    wb.close()
+    
         
 #==================================================================
 #===========================SUB MENU===============================
 #==================================================================
-def sub_menu():
+def sub_menu(account_no):
     while True:
         wb=openpyxl.load_workbook(file_name)
         sheet=wb.active
@@ -147,11 +173,11 @@ def sub_menu():
 4. Transaction History  
 5. Logout               [/white on black]
     """)
-        choice = input("Enter Choice")
+        choice = input("Enter Choice: ").strip()
         if choice=="1":
-            pass
+            check_bal(account_no)
         elif choice=="2":
-            pass
+            deposit(account_no)
         elif choice=="3":
             pass
         elif choice=="4":
