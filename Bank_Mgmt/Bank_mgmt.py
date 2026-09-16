@@ -80,15 +80,17 @@ def create_acc():
     if len(pin)!=6:
         err_msg("PIN")
         return
-
-    amount=float(input("Enter opening balance: "))
-    if amount<0:
+    try:
+        amount=float(input("Enter opening balance: "))
+        if amount<0:
+            err_msg("OPENING BALANCE")
+            return
+        transaction_id=str(uuid.uuid4())[:10]
+        status="Opening"
+        dt=cur_date()
+        sheet.append([acc_no,name,pin,transaction_id,status,amount,0,amount,dt])
+    except ValueError:
         err_msg("OPENING BALANCE")
-        return
-    transaction_id=str(uuid.uuid4())[:10]
-    status="Opening"
-    dt=cur_date()
-    sheet.append([acc_no,name,pin,transaction_id,status,amount,0,amount,dt])
     wb.save(file_name)
     wb.close()
     progress_bar(5)
@@ -122,39 +124,78 @@ def acc_login():
         progress_bar(5)
         err_msg("Account id or PIN")
     wb.close()
+def get_user_details(account_no):
+    wb=openpyxl.load_workbook(file_name)
+    sheet=wb.active
+    name=None
+    pin=None
+    for row in sheet.iter_rows(min_row=2,values_only=True):
+        if str(row[0])==str(account_no):
+            name=row[1]
+            pin=row[0]
+            break
+    wb.close()   
+    return name,pin
+
+def get_balance(account_no):
+    wb=openpyxl.load_workbook(file_name)
+    sheet=wb.active
+    current_balance=None
+    for row in sheet.iter_rows(min_row=2,values_only=True):
+        if str(row[0])==str(account_no):
+            current_balance=row[-2]
+    wb.close()
+    return current_balance
+            
+
 
 #==================================================================
 #************************CHECK BALANCE*****************************
 #==================================================================
 def check_bal(account_no):
-    wb = openpyxl.load_workbook(file_name)
-    sheet = wb.active
-    for row in sheet.iter_rows(min_row=2,values_only=True):
-        if str(row[0])==str(account_no):
-            console.print(f"[gray on cyan]Current Balance: ${row[-2]}[/gray on cyan]")
-            break
-    wb.close()
+    balance=get_balance(account_no)
+    console.print(f"\n[bold green]Current Balance: ${balance:.2f}[bold green]")
+
+
 
 #==================================================================
 #============================DEPOSIT===============================
 #==================================================================
 def deposit(account_no):
+    console.print(f"[bold magenta]Deposit Money[bold magenta]".center(100))
+
+    
+    try:
+        amount= float(input("Enter the amount of money to deposit: "))
+        if amount<0 or amount==0:
+            err_msg("DEPOSIT BALANCE")
+            return
+    except ValueError:
+        err_msg("DEPOSIT BALANCE")
+        return
+    
+    dt=cur_date()
+
+    transaction_id=str(uuid.uuid4())[:10]
+
+    name,pin=get_user_details(account_no)
+
+    if name==None:
+        console.print("[red]Corrupted data name doesn't exist but account does.[red]")
+        return
+    
+    transaction_type="Deposit"
+
+    prev_bal=get_balance(account_no)
+
+    current_bal=prev_bal+amount
+
     wb=openpyxl.load_workbook(file_name)
     sheet=wb.active
-    for row in sheet.iter_rows(min_row=2,values_only=True):
-        if account_no==str(row[0]):
-            amount= float(input("Enter the amount of money to deposit: "))
-            if amount<0 or amount==0:
-                err_msg("DEPOSIT BALANCE")
-            dt=cur_date()
-            transaction_id=str(uuid.uuid4())[:10]
-            name=row[1]
-            transaction_type="Deposit"
-            prev_bal=row[-2]
-            current_bal=prev_bal+amount
-            sheet.append([account_no,name,None,transaction_id,transaction_type,amount,prev_bal,current_bal,dt])
-            progress_bar(10)
-            console.print(f"[bold green on white]Money deposited successfully \nCurrent Balance: ${current_bal}[/bold green on white]".center(100))
+    sheet.append([account_no,name,None,transaction_id,transaction_type,amount,prev_bal,current_bal,dt])
+    
+    progress_bar(10)
+    console.print(f"[bold green on white]Money deposited successfully \nCurrent Balance: ${current_bal}[/bold green on white]".center(100))
     wb.save(file_name)
     wb.close()
     
