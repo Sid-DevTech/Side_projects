@@ -6,13 +6,12 @@ import urllib.parse
 
 load_dotenv()
 
-client = genai.Client()
 
 def ai_output():
-    for word in interaction.output_text.split(" "):
+    for word in output_text.split(" "):
         yield word + " "
         time.sleep(0.02)
-    
+
 def render_badge(text, color="#00C6FF", bg_color="rgba(0, 198, 255, 0.1)"):
     st.markdown(f"""
         <span style="
@@ -30,35 +29,259 @@ def render_badge(text, color="#00C6FF", bg_color="rgba(0, 198, 255, 0.1)"):
         </span>
     """, unsafe_allow_html=True)
 
-def update_status(placeholder, emoji, text):
-    """Renders shining text and a floating emoji inside an st.empty slot."""
-    placeholder.markdown(f"""
-        <div class="aero-status-box">
-            <span class="floating-icon">{emoji}</span>
-            <span class="shine-text">{text}</span>
+def update_status(container, icon_emoji, text_message):
+    """Renders a glowing status card: pulsing icon halo, shimmering text,
+    and a small typing-indicator, inside an st.empty slot."""
+    container.markdown(f"""
+        <div class="ai-thinking-box">
+            <div class="icon-wrap">
+                <span class="ai-floating-icon">{icon_emoji}</span>
+            </div>
+            <div class="ai-text-wrap">
+                <span class="thinking-dots"><span></span><span></span><span></span></span>
+                <span class="ai-flicker-text">{text_message}</span>
+            </div>
         </div>
     """, unsafe_allow_html=True)
 
 
+if "itinerary_response" not in st.session_state:
+    st.session_state.itinerary_response = None
+
+if "locations_data" not in st.session_state:
+    st.session_state.locations_data = None
+
+# Progress bar UI
+st.markdown("""
+<style>
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0px) rotate(-4deg); }
+    50% { transform: translateY(-8px) rotate(4deg); }
+}
+
+@keyframes glowRing {
+    0%, 100% { opacity: 0.35; transform: scale(0.9); }
+    50% { opacity: 0.8; transform: scale(1.3); }
+}
+
+@keyframes shimmerText {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+@keyframes borderGlow {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(0, 198, 255, 0.25), inset 0 0 20px rgba(0, 198, 255, 0.05);
+        border-color: rgba(0, 198, 255, 0.25);
+    }
+    50% {
+        box-shadow: 0 0 26px rgba(0, 198, 255, 0.55), inset 0 0 30px rgba(0, 198, 255, 0.12);
+        border-color: rgba(0, 198, 255, 0.6);
+    }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dotBounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+    40% { transform: translateY(-5px); opacity: 1; }
+}
+
+@keyframes progressShimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+.ai-thinking-box {
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+    background: rgba(15, 23, 42, 0.6) !important;
+    border: 1px solid rgba(0, 198, 255, 0.25) !important;
+    border-radius: 14px !important;
+    padding: 16px 22px !important;
+    margin: 15px 0 !important;
+    backdrop-filter: blur(8px) !important;
+    animation: borderGlow 2.2s ease-in-out infinite, fadeInUp 0.35s ease-out !important;
+    will-change: box-shadow, border-color !important;
+}
+
+.icon-wrap {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 42px !important;
+    height: 42px !important;
+    flex-shrink: 0 !important;
+}
+
+.icon-wrap::before {
+    content: "" !important;
+    position: absolute !important;
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 50% !important;
+    background: radial-gradient(circle, rgba(0, 198, 255, 0.45) 0%, rgba(0, 198, 255, 0) 70%) !important;
+    animation: glowRing 2s ease-in-out infinite !important;
+}
+
+.ai-floating-icon {
+    position: relative !important;
+    font-size: 1.5rem !important;
+    display: inline-block !important;
+    animation: floatIcon 2.2s ease-in-out infinite !important;
+    will-change: transform !important;
+}
+
+.ai-text-wrap {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.ai-flicker-text {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-size: 1.05rem !important;
+    font-weight: 600 !important;
+    background: linear-gradient(90deg, #6FE3FF 0%, #00C6FF 25%, #FFFFFF 50%, #00C6FF 75%, #6FE3FF 100%) !important;
+    background-size: 200% auto !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    animation: shimmerText 2.5s linear infinite !important;
+}
+
+.thinking-dots {
+    display: inline-flex !important;
+    gap: 3px !important;
+    vertical-align: middle !important;
+}
+
+.thinking-dots span {
+    width: 5px !important;
+    height: 5px !important;
+    border-radius: 50% !important;
+    background: #00C6FF !important;
+    box-shadow: 0 0 6px #00C6FF !important;
+    animation: dotBounce 1.2s ease-in-out infinite !important;
+}
+
+.thinking-dots span:nth-child(2) { animation-delay: 0.15s !important; }
+.thinking-dots span:nth-child(3) { animation-delay: 0.3s !important; }
+
+/* Re-theme the native st.progress bar to match the loading card */
+div[data-testid="stProgress"] div[role="progressbar"] {
+    background-color: rgba(0, 198, 255, 0.08) !important;
+    border-radius: 999px !important;
+    height: 10px !important;
+    overflow: hidden !important;
+}
+
+div[data-testid="stProgress"] div[role="progressbar"] > div {
+    background: linear-gradient(90deg, #00C6FF, #0072FF, #00C6FF) !important;
+    background-size: 200% 100% !important;
+    animation: progressShimmer 1.6s linear infinite !important;
+    border-radius: 999px !important;
+    box-shadow: 0 0 12px rgba(0, 198, 255, 0.7) !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+
 with st.sidebar:
-    st.title("Aero",text_alignment="center",width='stretch',icon=":material/flight:")
+    
+    st.markdown("""
+        <style>
+        [data-testid="stSidebar"] {
+            background: 
+                /* Linear overlay to ensure white/light text and input labels stay legible */
+                linear-gradient(180deg, rgba(15, 23, 42, 0.72) 0%, rgba(10, 15, 29, 0.85) 100%),
+                /* Direct Pexels image link */
+                url('https://images.pexels.com/photos/15011656/pexels-photo-15011656.jpeg') center/cover no-repeat fixed !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
+        }
+
+        /* Boost sidebar label contrast */
+        [data-testid="stSidebar"] label, 
+        [data-testid="stSidebar"] .stMarkdown {
+            color: #F8FAFC !important;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+        }
+        </style>
+    """, unsafe_allow_html=True)
+    st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+    .sidebar-brand-perfect {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 10px !important;
+        width: 100% !important;
+        margin-top: -10px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .sidebar-brand-perfect .material-symbols-outlined {
+        font-size: 2.4rem !important;      
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+        display: inline-block !important;
+    }
+
+    .sidebar-brand-perfect .brand-text-solid {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+        font-size: 2.2rem !important;      
+        font-weight: 800 !important;
+        color: #FFFFFF !important;
+        letter-spacing: -0.5px !important;
+        line-height: 1 !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+    
+    st.markdown("""
+        <div class="sidebar-brand-perfect">
+            <span class="material-symbols-outlined">flight</span>
+            <span class="brand-text-solid">Aero</span>
+        </div>
+    """, unsafe_allow_html=True)
+    
     st.divider()
-    # render_badge("READY TO EXPLORE", color="#00E676", bg_color="rgba(0, 230, 118, 0.1)")
-    st.pills("Status", ["🟢 Ready to Explore", "⚡ Gemini Powered"], selection_mode="multi")  
-    location= st.text_input("Where are you planning to go? ")
-    # days_number= st.number_input("Number of days to plan the trip", min_value=1, max_value=30)
-    days_number=st.slider("Number of days to plan the trip",min_value=1,max_value=30,value=1)
-    budget= st.selectbox("What's your budget?", ("Luxury","Moderate", "Budgeted"))
-    trip_plan= st.radio("Who are you planning to go with?", ["Family","Friends","Solo","Partner"])
-    plan_btn = st.button("Plan trip",type="primary",use_container_width=True)
-    date_time=st.date_input("Schedule your trip")
+    st.pills("Status", ["🟢 Ready to Explore", "⚡ Gemini Powered"], selection_mode="multi")   
+    location = st.text_input("Where are you planning to go? ")
+    days_number = st.slider("Number of days to plan the trip", min_value=1, max_value=30, value=1)
+    budget = st.selectbox("What's your budget?", ("Luxury", "Moderate", "Budgeted"))
+    trip_plan = st.radio("Who are you planning to go with?", ["Family", "Friends", "Solo", "Partner"])
+    plan_btn = st.button("Plan trip", type="primary", use_container_width=True)
+    date_time = st.date_input("Schedule your trip")
 
 
-st.title("Aero Destination Dashboard",icon=":material/flight:")
+
+st.title("Aero Destination Dashboard", icon=":material/flight:")
+st.markdown("""
+    <style>
+    [data-testid="stAppViewContainer"] {
+        background: 
+            /* Subtle dark overlay to keep foreground text legible */
+            linear-gradient(180deg, rgba(15, 23, 42, 0.78) 0%, rgba(15, 23, 42, 0.88) 100%),
+            /* Direct high-resolution Vernazza, Cinque Terre photo link */
+            url('https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 st.caption("Your Personal Trip Assistant")
 st.markdown("""
     <style>
-    /* Prevent metric labels and text from cutting off with '...' */
     div[data-testid="stMetricValue"] > div, 
     div[data-testid="stMetricLabel"] > div {
         white-space: normal !important;
@@ -68,33 +291,41 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-col1 ,col2, col3, col4 = st.columns(4)
+col1, col2, col3, col4 = st.columns(4)
 with col1:
-    st.metric(label="Destination 🗺️", value=location if location else "Not Set",border=True)
+    st.metric(label="Destination 🗺️", value=location if location else "Not Set", border=True)
 with col2:
-    st.metric(label="Duration ⏱️",value=f"{days_number} Days",border=True)
+    st.metric(label="Duration ⏱️", value=f"{days_number} Days", border=True)
 with col3:
-    st.metric(label="Trip type",value=f"{trip_plan}",border=True)
+    st.metric(label="Trip type", value=f"{trip_plan}", border=True)
 with col4:
-    st.metric(label="Budget 💰",value=f"{budget}",border=True,width="stretch")
-st.divider()    
-
-
-
+    st.metric(label="Budget 💰", value=f"{budget}", border=True, width="stretch")
+st.divider()
 
 prompt = f"""
-You are a travel planner. Plan a {days_number}-day trip to {location} for {trip_plan} scheduled time for trip {date_time}.
-DATE & SEASONAL INTELLIGENCE:
-- The trip starts on {date_time}.
+You are an expert, date-conscious travel planner. Plan a detailed {days_number}-day trip to {location} for {trip_plan}.
+
+TRIP CONTEXT & SEASONAL INTELLIGENCE:
+- Start Date: {date_time}
+- Budget Level: {budget}
 - Tailor activities strictly to the typical weather, climate, daylight hours, and local seasonal events in {location} during {date_time}.
-- Provide specific date-conscious advice for each day (e.g., weekend crowd warnings on Saturday/Sunday, seasonal night markets, or winter/summer opening hours).
-Provide two sections in your response:
+
+Provide your response in EXACTLY three sections as formatted below:
 
 SECTION 1 - ITINERARY:
-Detailed day-by-day itinerary in bullet points.
+For each day of the trip, follow this exact structure:
+
+### Day X: [Catchy Day Title] ([Exact Date] - [Day of Week])
+* **Morning:** [Detailed morning activity with specific places, entry tips, and best times to visit]
+* **Afternoon:** [Detailed afternoon activity, nearby lunch spots, and transit advice]
+* **Evening:** [Nightlife, dinner recommendations tailored to a {budget} budget, or relaxed evening walks]
+* **💡 Local & Date Tip:** [Date-conscious advice e.g., crowd warnings, advanced booking requirements, or seasonal opening hours]
+
+---
 
 SECTION 2 - LOCATIONS:
-A single line containing ONLY the key place names separated by commas (e.g., Tokyo Tower, Senso-ji Temple, Shibuya Crossing).
+Provide a single line containing ONLY key place names separated by commas for mapping.
+Example: Zócalo, Palacio de Bellas Artes, Casa Azul Frida Kahlo Museum
 
 SECTION 3 - COSTS:
 Provide an itemized cost estimate for this entire {days_number}-day trip in {location} for a {budget} budget.
@@ -105,110 +336,173 @@ Activities & Tickets: $Z
 Local Transit: $W
 """
 
+
+
 if plan_btn:
-    st.markdown("""
-    <style>
-    @keyframes textShine {
-        0% { background-position: -200% 0; }
-        100% { background-position: 200% 0; }
-    }
-
-    @keyframes floatIcon {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-4px); }
-    }
-
-    .aero-status-box {
-        display: flex !important;
-        align-items: center !important;
-        gap: 8px !important;
-        margin-bottom: 8px !important;
-    }
-
-    .aero-status-box .shine-text {
-        font-family: Source Sans Pro, -apple-system, BlinkMacSystemFont, Roboto, sans-serif !important;
-        font-size: 1rem !important;
-        font-weight: 600 !important;
-        background: linear-gradient(
-            90deg, 
-            #00C6FF 0%, 
-            #FFFFFF 30%, 
-            #0072FF 60%, 
-            #00C6FF 100%
-        ) !important;
-        background-size: 200% auto !important;
-        -webkit-background-clip: text !important;
-        -webkit-text-fill-color: transparent !important;
-        background-clip: text !important;
-        animation: textShine 3s linear infinite !important;
-    }
-
-    .aero-status-box .floating-icon {
-        font-size: 1.1rem !important;
-        display: inline-block !important;
-        animation: floatIcon 2.5s ease-in-out infinite !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
     if not location:
         st.warning("Please enter a destination in the sidebar.")
     else:
         status_box = st.empty()
         progress_bar = st.progress(0)
 
-
-        update_status(status_box, "🔍", f"Analyzing preferences for {location}...")
+        update_status(status_box, "🔍", f"Analyzing preferences for {location}")
         for p in range(0, 36):
             time.sleep(0.3)
-            progress_bar.progress(p)
+            progress_bar.progress(p, text=f"{p}%")
 
-
-        update_status(status_box, "✈️", f"Mapping top spots across {days_number} days...")
+        update_status(status_box, "✈️", f"Mapping top spots across {days_number} days")
         for p in range(36, 71):
             time.sleep(0.3)
-            progress_bar.progress(p)
+            progress_bar.progress(p, text=f"{p}%")
 
-
-        update_status(status_box, "🗓️", "Building your custom itinerary...")
+        update_status(status_box, "🗓️", "Building your custom itinerary")
         for p in range(71, 96):
-            time.sleep(0.3)
-            progress_bar.progress(p)
+            time.sleep(0.2)
+            progress_bar.progress(p, text=f"{p}%")
 
-    st.subheader("Route & Daily Itinerary",icon="🗺️")
-    interaction= client.interactions.create( model = "gemini-3.5-flash-lite",
-    input=prompt)
-    progress_bar.progress(100)
-    time.sleep(0.2)
-    progress_bar.empty()
-    status_box.empty()
+    
+        client = genai.Client()
+        response = client.models.generate_content(
+            model="gemini-3.5-flash-lite",
+            contents=prompt
+        )
+
+        progress_bar.progress(100, text="100%")
+        time.sleep(0.2)
+        progress_bar.empty()
+        status_box.empty()
+
+       
+        st.session_state.itinerary_response = response.text
+        st.session_state.locations_data = location
+
+   
+if st.session_state.itinerary_response:
+    output_text = st.session_state.itinerary_response
+    saved_location = st.session_state.locations_data
+
+    st.subheader("Route & Daily Itinerary", icon="🗺️")
+
     with st.container():
         st.caption("Interactive Map View")
-    if "SECTION 2 - LOCATIONS:" in interaction.output_text:
-        raw_locations = interaction.output_text.split("SECTION 2 - LOCATIONS:")[1].strip()
-        query = urllib.parse.quote(f"{raw_locations} in {location}")
-        map_url = f"https://maps.google.com/maps?q={query}&t=&z=12&ie=UTF8&iwloc=&output=embed"
-        st.iframe(map_url, height=400)
-    st.success(f"🎉 Awesome! Your **{days_number}-day custom guide for {location}** is ready below.")
+        if "SECTION 2 - LOCATIONS:" in output_text:
+            raw_locations = output_text.split("SECTION 2 - LOCATIONS:")[1].split("SECTION 3 - COSTS:")[0].strip()
+            query = urllib.parse.quote(f"{raw_locations} in {saved_location}")
+            map_url = f"https://maps.google.com/maps?q={query}&t=&z=12&ie=UTF8&iwloc=&output=embed"
+            st.iframe(map_url, height=400)
+
+    st.success(f"🎉 Awesome! Your custom guide for **{saved_location}** is ready below.")
+
     st.subheader("Trip Essentials And Tools")
-    with st.expander("Recommended Packing Checklist",expanded=False):
-        st.checkbox("Universal Power Adapter")
-        st.checkbox("Travel Assurance Documents")
-        st.checkbox("Comfortable Walking Shoes")
-    if "SECTION 3 - COSTS:" in interaction.output_text:
-        cost_text= interaction.output_text.split("SECTION 3 - COSTS:")[1].strip()
-        costs={}
+    with st.expander("Recommended Packing Checklist", expanded=False):
+        st.checkbox("Universal Power Adapter", key="chk_adapter")
+        st.checkbox("Travel Assurance Documents", key="chk_docs")
+        st.checkbox("Comfortable Walking Shoes", key="chk_shoes")
+
+    if "SECTION 3 - COSTS:" in output_text:
+        cost_text = output_text.split("SECTION 3 - COSTS:")[1].strip()
+        costs = {}
         for line in cost_text.split("\n"):
             if ":" in line:
-                category,val= line.split(":",1)
+                category, val = line.split(":", 1)
                 costs[category.strip()] = val.strip()
+
         with st.expander("💵 Estimated Cost Breakdown", expanded=False):
             c1, c2, c3, c4 = st.columns(4)
             c1.metric("Accommodation", costs.get("Accommodation", "N/A"))
             c2.metric("Food & Dining", costs.get("Food & Dining", "N/A"))
             c3.metric("Activities", costs.get("Activities & Tickets", "N/A"))
             c4.metric("Local Transit", costs.get("Local Transit", "N/A"))        
-    with st.expander("💡 Local Safety & Etiquette", expanded=False):
-        st.info("Emergency Contact: 112 | Always carry cash for local vendors.")    
 
-    st.write_stream(ai_output)
-    st.feedback("faces")
+    with st.expander("💡 Local Safety & Etiquette", expanded=False):
+        st.info("Emergency Contact: 112 | Always carry cash for local vendors.") 
+
+   
+    if "SECTION 1 - ITINERARY:" in output_text:
+        itinerary = output_text.split("SECTION 1 - ITINERARY:")[1].split("SECTION 2 - LOCATIONS:")[0].strip()
+        st.markdown(itinerary)
+    else:
+        st.markdown(output_text)   
+
+   
+    st.text("How much did you like Aero?")
+    feedback = st.feedback("faces")
+
+if feedback is not None:
+    
+    st.balloons()
+
+    
+    responses = {
+        0: "We're sorry to hear that! We'll keep improving Aero for your next journey.",
+        1: "Thanks for the feedback! We're constantly tuning Aero to serve you better.",
+        2: "Thanks for checking out Aero! Wishing you a great trip ahead.",
+        3: "Awesome! glad Aero helped plan your travel itinerary.",
+        4: "Woohoo! Thanks for loving Aero! Safe travels on your upcoming adventure! ✈️"
+    }
+    user_msg = responses.get(feedback, "Thanks for exploring with Aero! Safe travels!")
+
+  
+    st.markdown(f"""
+        <!-- Load canvas-confetti library -->
+        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+        
+        <script>
+            // Fire custom cyan & blue confetti burst on load
+            confetti({{
+                particleCount: 80,
+                spread: 70,
+                origin: {{ y: 0.8 }},
+                colors: ['#00C6FF', '#0072FF', '#FFFFFF', '#38BDF8']
+            }});
+        </script>
+
+        <style>
+        /* Smooth Slide-Up & Glow Entrance Animation */
+        @keyframes slideUpGlow {{
+            0% {{
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+                box-shadow: 0 0 0 rgba(0, 198, 255, 0);
+            }}
+            50% {{
+                box-shadow: 0 8px 30px rgba(0, 198, 255, 0.4);
+            }}
+            100% {{
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                box-shadow: 0 4px 20px rgba(0, 198, 255, 0.2);
+            }}
+        }}
+
+        .animated-feedback-box {{
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(0, 114, 255, 0.15) 100%);
+            border: 1px solid rgba(0, 198, 255, 0.4);
+            border-radius: 14px;
+            padding: 18px 26px;
+            text-align: center;
+            margin-top: 15px;
+            backdrop-filter: blur(10px);
+            animation: slideUpGlow 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }}
+
+        .animated-feedback-text {{
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(90deg, #00C6FF, #E0F7FA, #0072FF);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            letter-spacing: 0.2px;
+        }}
+        </style>
+
+        <div class="animated-feedback-box">
+            <span style="font-size: 1.2rem;">✨</span>
+            <span class="animated-feedback-text">
+                {user_msg}
+            </span>
+            <span style="font-size: 1.2rem;">✨</span>
+        </div>
+    """, unsafe_allow_html=True)
