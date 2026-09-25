@@ -1,1 +1,1 @@
-This repository contains my projects for backup
+This repository contains the projects I have made
