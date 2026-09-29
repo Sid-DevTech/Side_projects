@@ -65,6 +65,6 @@ cd travel_assistant_web
 python -m pip install -r requirements.txt
 streamlit run main.py
 ```
-=======
+
 This repository contains the projects I have made
 >>>>>>> f0d2f741dc3c0c97b8988324ba8bc6eda4428df8
