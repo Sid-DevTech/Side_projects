@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Python Projects
 
 A collection of Python projects. This overview intentionally leaves out the `GenAi/` folder.
